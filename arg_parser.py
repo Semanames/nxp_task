@@ -21,7 +21,7 @@ class ClockModelArgumentParser(argparse.ArgumentParser):
         self.add_argument('--genetic-it', help='number of iterations for genetic algorithm')
         self.add_argument('--genetic-pop-count', help='number of possible combinations for multiplexor ports')
 
-    def parse_args(self, *args, **kwargs):
+    def parse_args(self, *args, **kwargs) -> argparse.Namespace:
         arguments = super().parse_args(*args, **kwargs)
 
         if arguments.method != 'genetic' and arguments.genetic_it:

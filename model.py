@@ -18,6 +18,10 @@ class ClockModel:
         self.output_unit = []
 
     def get_output_signal(self) -> float:
+        '''
+        Method calls get_signal_from method from Output Unit object
+        :return:
+        '''
         return self.get_signal_from(self.output_unit[0])
 
     def load_model_from_config(self, config: dict):
@@ -79,7 +83,7 @@ class ClockModel:
     def get_signal_from(unit: Union[float, Unit]) -> float:
         '''
         Recursive function that goes bottom-up from selected
-        Unit we would like to get the output from, to the Input Unit
+        Unit we would like to get the output from, to the Input Unit object
         :param unit: Unit
         :return: float
         '''

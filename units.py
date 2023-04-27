@@ -24,7 +24,7 @@ class Input(Unit):
     def inputs(self):
         return self.input_data
 
-    def get_active_input_unit(self):
+    def get_active_input_unit(self) -> float:
         return self.input_data
 
 
@@ -36,7 +36,7 @@ class Output(Unit):
     def inputs(self):
         return self._inputs
 
-    def get_active_input_unit(self):
+    def get_active_input_unit(self) -> Unit:
         return self.inputs[0]
 
 
@@ -50,10 +50,10 @@ class Divider(Unit):
     def inputs(self):
         return self._inputs
 
-    def get_active_input_unit(self):
+    def get_active_input_unit(self) -> Unit:
         return self.inputs[0]
 
-    def get_output_signal(self, signal):
+    def get_output_signal(self, signal: float) -> float:
         return signal/self.divisor
 
 

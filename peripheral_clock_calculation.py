@@ -2,24 +2,30 @@ import abc
 import math
 import random
 from functools import partial
+from typing import Tuple, List, Set, Any
 
 from model import ClockModel
 
 
 class BaseMultiplexorAdjuster:
+    '''
+    Base class for MultiplexorAdjusters.
+    Implementations of this class should represent different approaches for finding the closest output frequency
+    to wanted frequency
+    '''
 
     def __init__(self, clock_model: ClockModel):
         self.clock_model = clock_model
 
     @abc.abstractmethod
-    def calculate_nearest_output_frequency(self, wanted_frequency):
+    def calculate_nearest_output_frequency(self, wanted_frequency: float) -> Tuple[float, List[int]]:
         pass
 
-    def set_multiplexor_configuration(self, mpx_configuration):
+    def set_multiplexor_configuration(self, mpx_configuration: list):
         for multiplexor, selected_slot in zip(self.clock_model.multiplexors, mpx_configuration):
             multiplexor.active_input_slot = selected_slot
 
-    def evaluate_multiplexor_configuration(self, mpx_configuration, wanted_frequency):
+    def evaluate_multiplexor_configuration(self, mpx_configuration: list, wanted_frequency: float) -> Tuple[float, float]:
         self.set_multiplexor_configuration(mpx_configuration)
         output_signal = self.clock_model.get_output_signal()
         calc_freq_difference = abs(output_signal - wanted_frequency)
@@ -28,7 +34,14 @@ class BaseMultiplexorAdjuster:
 
 class GreedyMultiplexorAdjuster(BaseMultiplexorAdjuster):
 
-    def calculate_nearest_output_frequency(self, wanted_frequency):
+    '''
+    Implementation of greedy algorithm for finding wanted frequency.
+    Algorithm calculates all the possible combinations of multiplexor inputs
+    and for each one calculates output frequency. The combination of multiplexor inputs
+    with the closest output frequency to the wanted frequency is chosen.
+    '''
+
+    def calculate_nearest_output_frequency(self, wanted_frequency: float) -> Tuple[float, List[int]]:
 
         multiplexor_inputs_count = [len(mpx.inputs) for mpx in self.clock_model.multiplexors]
         multiplexor_port_mapping = [mpx.enumerated_ports for mpx in self.clock_model.multiplexors]
@@ -60,7 +73,7 @@ class GreedyMultiplexorAdjuster(BaseMultiplexorAdjuster):
 
         return selected_output_signal, selected_mpx_configuration
 
-    def calculate_combinations(self, input_list: list):
+    def calculate_combinations(self, input_list: list) -> List[List[int]]:
         if input_list:
             combination_list = []
             for i in range(input_list[0]):
@@ -79,6 +92,17 @@ class GreedyMultiplexorAdjuster(BaseMultiplexorAdjuster):
 
 
 class GeneticMultiplexorAdjuster(BaseMultiplexorAdjuster):
+
+    '''
+    Implementation of genetic algorithm for finding wanted frequency.
+    In first round it will generate finite number of random combinations
+    of multiplexor inputs, sort them by the vicinity of output frequency
+    to the wanted frequency and then will generate new generation of multiplexor
+    input combinations. New generation consists of genetic mutations (randomly mixed inputs)
+    of the combinations with best score (output frequency vicinity) and also randomly
+    generated combinations. The new generation of multiplexor input combinations are
+    again used in previous procedure within the while loop.
+    '''
 
     def __init__(self, clock_model: ClockModel, population_count: int, num_iterations: int):
         super().__init__(clock_model)
@@ -137,7 +161,10 @@ class GeneticMultiplexorAdjuster(BaseMultiplexorAdjuster):
         return best_output_signal, population_of_mpx_config[0]
 
     @staticmethod
-    def generate_population_from_parents(parent1, parent2, population_count, dominance_ratio=0.5) -> list:
+    def generate_population_from_parents(parent1: List[int],
+                                         parent2: List[int],
+                                         population_count: int,
+                                         dominance_ratio: float = 0.5) -> List[Tuple[Any]]:
         '''
         Method for generation of  mutations of parent combinations
         :param parent1: Input combination with best results
@@ -159,7 +186,7 @@ class GeneticMultiplexorAdjuster(BaseMultiplexorAdjuster):
         return list(set(new_population))
 
     @staticmethod
-    def generate_random_combinations(number_of_combinations: int, input_list):
+    def generate_random_combinations(number_of_combinations: int, input_list: List[int]) -> List[Tuple[int]]:
         random_combinations = []
         for _ in range(number_of_combinations):
             random_combinations.append(tuple([random.randint(0, i-1) for i in input_list]))

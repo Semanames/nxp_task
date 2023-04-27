@@ -37,7 +37,9 @@ model:
 
   tree:
     unit_name:
-        index_of_unit: index_of_port_for_output_of_given_unit
+        index_of_unit: index_of_port_for_output_of_given_unit 
+     (or)
+    unit_name: list_of_unit_indexes 
 
   params:
     unit_name: [list of input parameters for instantiation of units defined in 'units' section]
