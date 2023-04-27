@@ -1,0 +1,56 @@
+model:
+  units:
+
+    input: [ 0 ]
+    divider: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+    multiplexor: [ 0, 1 ]
+    output: [ 0 ]
+
+  tree:
+
+    input:
+      0 :
+        multiplexor:
+          0: 1
+        divider: [ 0, 1, 2, 3 ]
+
+    divider:
+      0 :
+          multiplexor:
+            0: 2
+      1 :
+          multiplexor:
+            0: 3
+      2 :
+          multiplexor:
+            0: 4
+      3 :
+          multiplexor:
+            0: 5
+      4 :
+          multiplexor:
+            1: 2
+      5 :
+          multiplexor:
+            1: 3
+      6:
+          multiplexor:
+            1: 4
+      7:
+          multiplexor:
+            1: 5
+
+    multiplexor:
+      0:
+          multiplexor:
+            1: 1
+          divider: [ 4, 5, 6, 7 ]
+
+      1 :
+          output: [ 0 ]
+
+  params:
+    input: [ 16.0 ]
+    divider: [ 2, 4, 8, 16, 2, 3, 4, 5 ]
+    multiplexor: [1, 1]
+
