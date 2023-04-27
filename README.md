@@ -44,6 +44,11 @@ model:
   params:
     unit_name: [list of input parameters for instantiation of units defined in 'units' section]
 ```
+* `units` defines which objects will be instantiated. Input and output objects are necessary.
+* `tree` defines the whole structure of dividers and multiplexors. This part represents, where the output from each 
+unit is rooted to (see example yaml)
+* `params` are input parameters needed at initialization of each object defined in `units` block
+
 Input YAML example is placed in the root of this repo (`model_config_example.yaml`)
 ### Basic commands
 To run our peripheral clock finding script we need to run this command:<br />
