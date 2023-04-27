@@ -55,3 +55,5 @@ with `genetic` method come these sub command-line arguments: <br />
 `--genetic-it` for defining number of iterations of finding optimal multiplexor configuration by genetic algorithm <br />
 `--genetic-pop-count` for defining number of iterations of finding optimal multiplexor configuration by genetic algorithm
 
+Try to run:
+`python3 cli.py -h` and `python3 cli.py --model model_config_example.yaml` for initial testing
